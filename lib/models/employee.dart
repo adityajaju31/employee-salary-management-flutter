@@ -28,5 +28,25 @@ class Employee {
       salary: salary ?? this.salary,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'fullName': fullName,
+      'jobTitle': jobTitle,
+      'country': country,
+      'salary': salary,
+    };
+  }
+
+  factory Employee.fromMap(Map<String, dynamic> map) {
+    return Employee(
+      id: map['id'] as String,
+      fullName: map['fullName'] as String,
+      jobTitle: map['jobTitle'] as String,
+      country: map['country'] as String,
+      salary: map['salary'] as int,
+    );
+  }
 }
 
