@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'employee_card.dart';
+import 'employee_form_bottom_sheet.dart';
 
 class EmployeeListPage extends StatelessWidget {
   const EmployeeListPage({super.key});
@@ -86,7 +88,7 @@ class EmployeeListPage extends StatelessWidget {
                           mainAxisSpacing: 12,
                         ),
                         itemCount: _mockEmployees.length,
-                        itemBuilder: (context, index) => _EmployeeCard(
+                        itemBuilder: (context, index) => EmployeeCard(
                           employee: _mockEmployees[index],
                         ),
                       )
@@ -94,7 +96,7 @@ class EmployeeListPage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                         itemCount: _mockEmployees.length,
                         separatorBuilder: (_, __) => const SizedBox(height: 8),
-                        itemBuilder: (context, index) => _EmployeeCard(
+                        itemBuilder: (context, index) => EmployeeCard(
                           employee: _mockEmployees[index],
                         ),
                       ),
@@ -105,166 +107,19 @@ class EmployeeListPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Show add employee dialog
+          EmployeeListPage.showEmployeeForm(context, null);
         },
         child: const Icon(Icons.add),
       ),
     );
   }
-}
 
-class _EmployeeCard extends StatelessWidget {
-  final Map<String, dynamic> employee;
-
-  const _EmployeeCard({required this.employee});
-
-  String _formatSalary(int salary) {
-    return '\$${salary.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]},',
-    )}';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: colorScheme.outline.withOpacity(0.2),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          // TODO: Navigate to employee details
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          employee['fullName'] as String,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 3,
-                          ),
-                          decoration: BoxDecoration(
-                            color: colorScheme.primaryContainer.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            employee['jobTitle'] as String,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onPrimaryContainer,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          // TODO: Edit employee
-                        },
-                        icon: Icon(
-                          Icons.edit_outlined,
-                          size: 18,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        tooltip: 'Edit',
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(36, 36),
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          // TODO: Delete employee
-                        },
-                        icon: Icon(
-                          Icons.delete_outline,
-                          size: 18,
-                          color: colorScheme.error,
-                        ),
-                        tooltip: 'Delete',
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(36, 36),
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Divider(
-                height: 1,
-                thickness: 1,
-                color: colorScheme.outline.withOpacity(0.1),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 16,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        employee['country'] as String,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    _formatSalary(employee['salary'] as int),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+  static void showEmployeeForm(BuildContext context, Map<String, dynamic>? employee) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => EmployeeFormBottomSheet(employee: employee),
     );
   }
 }
