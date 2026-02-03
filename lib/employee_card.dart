@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'cubit/employee_cubit.dart';
+import 'models/employee.dart';
 import 'employee_list_page.dart';
 
 class EmployeeCard extends StatelessWidget {
-  final Map<String, dynamic> employee;
+  final Employee employee;
 
   const EmployeeCard({super.key, required this.employee});
 
@@ -47,7 +50,7 @@ class EmployeeCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          employee['fullName'] as String,
+                          employee.fullName,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -63,7 +66,7 @@ class EmployeeCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
-                            employee['jobTitle'] as String,
+                            employee.jobTitle,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: colorScheme.onPrimaryContainer,
                               fontWeight: FontWeight.w500,
@@ -95,7 +98,7 @@ class EmployeeCard extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () {
-                          // TODO: Delete employee
+                          context.read<EmployeeCubit>().deleteEmployee(employee.id);
                         },
                         icon: Icon(
                           Icons.delete_outline,
@@ -133,7 +136,7 @@ class EmployeeCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        employee['country'] as String,
+                        employee.country,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
@@ -141,7 +144,7 @@ class EmployeeCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    _formatSalary(employee['salary'] as int),
+                    _formatSalary(employee.salary),
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.bold,

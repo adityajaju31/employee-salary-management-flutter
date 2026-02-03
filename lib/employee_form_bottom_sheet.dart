@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'cubit/employee_cubit.dart';
+import 'models/employee.dart';
 
 class EmployeeFormBottomSheet extends StatefulWidget {
-  final Map<String, dynamic>? employee;
+  final Employee? employee;
 
   const EmployeeFormBottomSheet({super.key, this.employee});
 
@@ -22,11 +25,11 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
   void initState() {
     super.initState();
     _isEditMode = widget.employee != null;
-    _fullNameController = TextEditingController(text: widget.employee?['fullName'] ?? '');
-    _jobTitleController = TextEditingController(text: widget.employee?['jobTitle'] ?? '');
-    _countryController = TextEditingController(text: widget.employee?['country'] ?? '');
+    _fullNameController = TextEditingController(text: widget.employee?.fullName ?? '');
+    _jobTitleController = TextEditingController(text: widget.employee?.jobTitle ?? '');
+    _countryController = TextEditingController(text: widget.employee?.country ?? '');
     _salaryController = TextEditingController(
-      text: widget.employee?['salary']?.toString() ?? '',
+      text: widget.employee?.salary.toString() ?? '',
     );
   }
 
@@ -160,7 +163,28 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
                     FilledButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // TODO: Save employee
+                          final cubit = context.read<EmployeeCubit>();
+                          final salary = int.parse(_salaryController.text);
+
+                          if (_isEditMode && widget.employee != null) {
+                            final updatedEmployee = widget.employee!.copyWith(
+                              fullName: _fullNameController.text.trim(),
+                              jobTitle: _jobTitleController.text.trim(),
+                              country: _countryController.text.trim(),
+                              salary: salary,
+                            );
+                            cubit.updateEmployee(updatedEmployee);
+                          } else {
+                            final newEmployee = Employee(
+                              id: DateTime.now().millisecondsSinceEpoch.toString(),
+                              fullName: _fullNameController.text.trim(),
+                              jobTitle: _jobTitleController.text.trim(),
+                              country: _countryController.text.trim(),
+                              salary: salary,
+                            );
+                            cubit.addEmployee(newEmployee);
+                          }
+
                           Navigator.of(context).pop();
                         }
                       },
