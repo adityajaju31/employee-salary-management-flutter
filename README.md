@@ -4,13 +4,12 @@ A Flutter application for managing employee information with salary tracking. Th
 
 ## Overview
 
-This application allows users to manage employee data including full name, job title, country, and salary. All data is persisted locally using SQLite, ensuring data availability across app sessions. The UI is built with Material 3 and adapts seamlessly to different screen sizes.
+This application allows users to manage employee data including full name, job title, country, and salary. All data is persisted locally using SQLite, ensuring data availability across app sessions. The UI is built with Material 3 for a modern, clean interface.
 
 ## Features
 
 - **Employee CRUD Operations**: Create, read, update, and delete employee records
 - **SQLite Persistence**: All employee data is stored locally in a SQLite database
-- **Responsive Design**: UI adapts to phones, tablets, and different orientations
 - **Material 3 UI**: Modern, clean interface following Material Design 3 guidelines
 - **Form Validation**: Input validation with clear error messages
 - **Delete Confirmation**: Safety dialog before deleting employees
@@ -23,7 +22,6 @@ The application follows a layered architecture with clear separation of concerns
 ### Presentation Layer
 - **UI Widgets**: `EmployeeListPage`, `EmployeeCard`, `EmployeeFormBottomSheet`
 - **State Management**: `EmployeeCubit` using flutter_bloc for reactive state updates
-- Responsive layouts using `LayoutBuilder` and `MediaQuery`
 
 ### Business Logic Layer
 - **EmployeeCubit**: Manages employee state and coordinates with repository
@@ -57,17 +55,13 @@ Run tests with:
 flutter test
 ```
 
-## Responsiveness
+## UI Design
 
-The UI adapts to different screen sizes using:
+The UI is optimized for phones with:
 
-- **LayoutBuilder**: Detects screen width to determine layout strategy
-- **Adaptive Layouts**: 
-  - Phones: Single-column `ListView` for employee cards
-  - Tablets: Two-column `GridView` for better space utilization
-- **Responsive Padding**: Scales from 12px on phones to 16px on tablets
-- **Content Constraints**: Maximum width of 1200px on large screens
+- **ListView Layout**: Single-column list of employee cards
 - **Keyboard Handling**: Bottom sheets adjust for on-screen keyboard
+- **Material 3 Components**: Cards, buttons, and form fields following Material Design guidelines
 
 ## How to Run
 
@@ -136,9 +130,14 @@ test/
 
 ## Screenshots
 
-<!-- Add screenshots here -->
-- Employee list view (phone)
-- Employee list view (tablet)
+- Employee list view
+![alt text](Screenshot_1770142640.png)
+
 - Add employee form
+![alt text](Screenshot_1770142476.png)
+
 - Edit employee form
+![alt text](Screenshot_1770142480.png)
+
 - Delete confirmation dialog
+![alt text](Screenshot_1770142485.png)

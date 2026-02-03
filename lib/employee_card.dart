@@ -26,7 +26,7 @@ class EmployeeCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: colorScheme.outline.withOpacity(0.2),
+          color: colorScheme.outline.withValues(alpha: 0.2),
           width: 1,
         ),
       ),
@@ -62,7 +62,7 @@ class EmployeeCard extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: colorScheme.primaryContainer.withOpacity(0.5),
+                            color: colorScheme.primaryContainer.withValues(alpha: 0.5),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -145,7 +145,7 @@ class EmployeeCard extends StatelessWidget {
               Divider(
                 height: 1,
                 thickness: 1,
-                color: colorScheme.outline.withOpacity(0.1),
+                color: colorScheme.outline.withValues(alpha: 0.1),
               ),
               const SizedBox(height: 10),
               Row(

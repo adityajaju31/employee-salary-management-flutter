@@ -1,37 +1,53 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/employee.dart';
 import '../repositories/employee_repository.dart';
+import 'employee_state.dart';
 
-class EmployeeCubit extends Cubit<List<Employee>> {
+class EmployeeCubit extends Cubit<EmployeeState> {
   final EmployeeRepository _repository;
-  bool _isLoading = false;
 
-  EmployeeCubit(this._repository) : super([]) {
-    _loadEmployees();
+  EmployeeCubit(this._repository) : super(const EmployeeState(employees: [], isLoading: true)) {
+    loadEmployees();
   }
 
-  bool get isLoading => _isLoading;
-
-  Future<void> _loadEmployees() async {
-    _isLoading = true;
-    final employees = await _repository.getAllEmployees();
-    _isLoading = false;
-    emit(employees);
+  Future<void> loadEmployees() async {
+    try {
+      emit(state.copyWith(isLoading: true, error: null));
+      final employees = await _repository.getAllEmployees();
+      emit(state.copyWith(employees: employees, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        error: 'Failed to load employees: ${e.toString()}',
+      ));
+    }
   }
 
   Future<void> addEmployee(Employee employee) async {
-    await _repository.insertEmployee(employee);
-    await _loadEmployees();
+    try {
+      await _repository.insertEmployee(employee);
+      await loadEmployees();
+    } catch (e) {
+      emit(state.copyWith(error: 'Failed to add employee: ${e.toString()}'));
+    }
   }
 
   Future<void> updateEmployee(Employee updatedEmployee) async {
-    await _repository.updateEmployee(updatedEmployee);
-    await _loadEmployees();
+    try {
+      await _repository.updateEmployee(updatedEmployee);
+      await loadEmployees();
+    } catch (e) {
+      emit(state.copyWith(error: 'Failed to update employee: ${e.toString()}'));
+    }
   }
 
   Future<void> deleteEmployee(String id) async {
-    await _repository.deleteEmployee(id);
-    await _loadEmployees();
+    try {
+      await _repository.deleteEmployee(id);
+      await loadEmployees();
+    } catch (e) {
+      emit(state.copyWith(error: 'Failed to delete employee: ${e.toString()}'));
+    }
   }
 }
 

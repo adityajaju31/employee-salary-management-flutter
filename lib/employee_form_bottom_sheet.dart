@@ -22,12 +22,14 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
   bool _isEditMode = false;
 
   bool _isFormValid() {
-    return _fullNameController.text.trim().isNotEmpty &&
-        _jobTitleController.text.trim().isNotEmpty &&
-        _countryController.text.trim().isNotEmpty &&
-        _salaryController.text.trim().isNotEmpty &&
-        int.tryParse(_salaryController.text) != null &&
-        int.parse(_salaryController.text) > 0;
+    if (_fullNameController.text.trim().isEmpty ||
+        _jobTitleController.text.trim().isEmpty ||
+        _countryController.text.trim().isEmpty ||
+        _salaryController.text.trim().isEmpty) {
+      return false;
+    }
+    final salary = int.tryParse(_salaryController.text);
+    return salary != null && salary > 0;
   }
 
   @override
@@ -71,7 +73,7 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: theme.colorScheme.outline.withOpacity(0.4),
+              color: theme.colorScheme.outline.withValues(alpha: 0.4),
               borderRadius: BorderRadius.circular(2),
             ),
           ),

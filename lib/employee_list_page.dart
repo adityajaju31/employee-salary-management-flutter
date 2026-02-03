@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'cubit/employee_cubit.dart';
+import 'cubit/employee_state.dart';
 import 'models/employee.dart';
 import 'employee_card.dart';
 import 'employee_form_bottom_sheet.dart';
@@ -14,13 +15,45 @@ class EmployeeListPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Employees'),
       ),
-      body: BlocBuilder<EmployeeCubit, List<Employee>>(
-        builder: (context, employees) {
-          final cubit = context.read<EmployeeCubit>();
-          
-          if (cubit.isLoading && employees.isEmpty) {
+      body: BlocBuilder<EmployeeCubit, EmployeeState>(
+        builder: (context, state) {
+          if (state.isLoading && state.employees.isEmpty) {
             return const Center(
               child: CircularProgressIndicator(),
+            );
+          }
+
+          if (state.error != null && state.employees.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Error',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      state.error!,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    FilledButton(
+                      onPressed: () => context.read<EmployeeCubit>().loadEmployees(),
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              ),
             );
           }
 
@@ -31,7 +64,7 @@ class EmployeeListPage extends StatelessWidget {
               final padding = isTablet ? 16.0 : 12.0;
               final maxContentWidth = isTablet ? 1200.0 : double.infinity;
 
-              if (employees.isEmpty) {
+              if (state.employees.isEmpty) {
                 return Center(
                   child: Padding(
                     padding: EdgeInsets.all(padding),
@@ -41,7 +74,7 @@ class EmployeeListPage extends StatelessWidget {
                         Icon(
                           Icons.people_outline,
                           size: 80,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
                         ),
                         const SizedBox(height: 24),
                         Text(
@@ -78,17 +111,17 @@ class EmployeeListPage extends StatelessWidget {
                               crossAxisSpacing: 12,
                               mainAxisSpacing: 12,
                             ),
-                            itemCount: employees.length,
+                            itemCount: state.employees.length,
                             itemBuilder: (context, index) => EmployeeCard(
-                              employee: employees[index],
+                              employee: state.employees[index],
                             ),
                           )
                         : ListView.separated(
                             padding: EdgeInsets.zero,
-                            itemCount: employees.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 8),
+                            itemCount: state.employees.length,
+                            separatorBuilder: (context, index) => const SizedBox(height: 8),
                             itemBuilder: (context, index) => EmployeeCard(
-                              employee: employees[index],
+                              employee: state.employees[index],
                             ),
                           ),
                   ),

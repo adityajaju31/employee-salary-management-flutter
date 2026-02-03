@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:employee_salary_app/services/database_service.dart';
 
 void main() {
@@ -10,7 +11,7 @@ void main() {
 
   group('DatabaseService', () {
     test('should open database successfully', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database = await service.database;
       
       expect(database, isNotNull);
@@ -20,7 +21,7 @@ void main() {
     });
 
     test('should create employees table with correct columns', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database = await service.database;
       
       final tableInfo = await database.rawQuery(
@@ -43,7 +44,7 @@ void main() {
     });
 
     test('should have id as primary key', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database = await service.database;
       
       final tableInfo = await database.rawQuery(
@@ -60,7 +61,7 @@ void main() {
     });
 
     test('should have correct column types', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database = await service.database;
       
       final tableInfo = await database.rawQuery(
@@ -82,7 +83,7 @@ void main() {
     });
 
     test('should handle database versioning correctly', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database = await service.database;
       
       final version = await database.getVersion();
@@ -93,7 +94,7 @@ void main() {
     });
 
     test('should return same database instance on multiple calls', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database1 = await service.database;
       final database2 = await service.database;
       
@@ -103,7 +104,7 @@ void main() {
     });
 
     test('should close database successfully', () async {
-      final service = DatabaseService();
+      final service = DatabaseService(databasePath: inMemoryDatabasePath);
       final database = await service.database;
       
       expect(database.isOpen, true);

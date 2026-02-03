@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:employee_salary_app/models/employee.dart';
 import 'package:employee_salary_app/repositories/employee_repository.dart';
 import 'package:employee_salary_app/services/database_service.dart';
@@ -15,7 +16,7 @@ void main() {
     late EmployeeRepository repository;
 
     setUp(() async {
-      databaseService = DatabaseService();
+      databaseService = DatabaseService(databasePath: inMemoryDatabasePath);
       repository = EmployeeRepository(databaseService);
     });
 
