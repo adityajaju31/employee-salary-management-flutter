@@ -16,6 +16,14 @@ class EmployeeListPage extends StatelessWidget {
       ),
       body: BlocBuilder<EmployeeCubit, List<Employee>>(
         builder: (context, employees) {
+          final cubit = context.read<EmployeeCubit>();
+          
+          if (cubit.isLoading && employees.isEmpty) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
           return LayoutBuilder(
             builder: (context, constraints) {
               final screenWidth = constraints.maxWidth;
@@ -25,29 +33,34 @@ class EmployeeListPage extends StatelessWidget {
 
               if (employees.isEmpty) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.people_outline,
-                        size: 64,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'No employees yet',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Add your first employee',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            ),
-                      ),
-                    ],
+                  child: Padding(
+                    padding: EdgeInsets.all(padding),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.people_outline,
+                          size: 80,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.4),
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'No employees yet',
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Tap the + button to add your first employee',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }

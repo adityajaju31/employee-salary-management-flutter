@@ -21,6 +21,15 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
 
   bool _isEditMode = false;
 
+  bool _isFormValid() {
+    return _fullNameController.text.trim().isNotEmpty &&
+        _jobTitleController.text.trim().isNotEmpty &&
+        _countryController.text.trim().isNotEmpty &&
+        _salaryController.text.trim().isNotEmpty &&
+        int.tryParse(_salaryController.text) != null &&
+        int.parse(_salaryController.text) > 0;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,6 +109,7 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
                         prefixIcon: Icon(Icons.person_outline),
                       ),
                       textCapitalization: TextCapitalization.words,
+                      onChanged: (_) => setState(() {}),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Full name is required';
@@ -116,6 +126,7 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
                         prefixIcon: Icon(Icons.work_outline),
                       ),
                       textCapitalization: TextCapitalization.words,
+                      onChanged: (_) => setState(() {}),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Job title is required';
@@ -132,6 +143,7 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
                         prefixIcon: Icon(Icons.location_on_outlined),
                       ),
                       textCapitalization: TextCapitalization.words,
+                      onChanged: (_) => setState(() {}),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Country is required';
@@ -148,6 +160,7 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
                         prefixIcon: Icon(Icons.attach_money),
                       ),
                       keyboardType: TextInputType.number,
+                      onChanged: (_) => setState(() {}),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Salary is required';
@@ -161,33 +174,35 @@ class _EmployeeFormBottomSheetState extends State<EmployeeFormBottomSheet> {
                     ),
                     const SizedBox(height: 24),
                     FilledButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          final cubit = context.read<EmployeeCubit>();
-                          final salary = int.parse(_salaryController.text);
+                      onPressed: _isFormValid()
+                          ? () {
+                              if (_formKey.currentState!.validate()) {
+                                final cubit = context.read<EmployeeCubit>();
+                                final salary = int.parse(_salaryController.text);
 
-                          if (_isEditMode && widget.employee != null) {
-                            final updatedEmployee = widget.employee!.copyWith(
-                              fullName: _fullNameController.text.trim(),
-                              jobTitle: _jobTitleController.text.trim(),
-                              country: _countryController.text.trim(),
-                              salary: salary,
-                            );
-                            cubit.updateEmployee(updatedEmployee);
-                          } else {
-                            final newEmployee = Employee(
-                              id: DateTime.now().millisecondsSinceEpoch.toString(),
-                              fullName: _fullNameController.text.trim(),
-                              jobTitle: _jobTitleController.text.trim(),
-                              country: _countryController.text.trim(),
-                              salary: salary,
-                            );
-                            cubit.addEmployee(newEmployee);
-                          }
+                                if (_isEditMode && widget.employee != null) {
+                                  final updatedEmployee = widget.employee!.copyWith(
+                                    fullName: _fullNameController.text.trim(),
+                                    jobTitle: _jobTitleController.text.trim(),
+                                    country: _countryController.text.trim(),
+                                    salary: salary,
+                                  );
+                                  cubit.updateEmployee(updatedEmployee);
+                                } else {
+                                  final newEmployee = Employee(
+                                    id: DateTime.now().millisecondsSinceEpoch.toString(),
+                                    fullName: _fullNameController.text.trim(),
+                                    jobTitle: _jobTitleController.text.trim(),
+                                    country: _countryController.text.trim(),
+                                    salary: salary,
+                                  );
+                                  cubit.addEmployee(newEmployee);
+                                }
 
-                          Navigator.of(context).pop();
-                        }
-                      },
+                                Navigator.of(context).pop();
+                              }
+                            }
+                          : null,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),

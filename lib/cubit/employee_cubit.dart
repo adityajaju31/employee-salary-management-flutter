@@ -4,13 +4,18 @@ import '../repositories/employee_repository.dart';
 
 class EmployeeCubit extends Cubit<List<Employee>> {
   final EmployeeRepository _repository;
+  bool _isLoading = false;
 
   EmployeeCubit(this._repository) : super([]) {
     _loadEmployees();
   }
 
+  bool get isLoading => _isLoading;
+
   Future<void> _loadEmployees() async {
+    _isLoading = true;
     final employees = await _repository.getAllEmployees();
+    _isLoading = false;
     emit(employees);
   }
 
