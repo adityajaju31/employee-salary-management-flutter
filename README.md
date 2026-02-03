@@ -131,13 +131,13 @@ test/
 ## Screenshots
 
 - Employee list view
-![alt text](Screenshot_1770142640.png)
+<img src="Screenshot_1770142640.png" width="300" height="600" alt="Employee list view">
 
 - Add employee form
-![alt text](Screenshot_1770142476.png)
+<img src="Screenshot_1770142476.png" width="300" height="600" alt="Add employee form">
 
 - Edit employee form
-![alt text](Screenshot_1770142480.png)
+<img src="Screenshot_1770142480.png" width="300" height="600" alt="Edit employee form">
 
 - Delete confirmation dialog
-![alt text](Screenshot_1770142485.png)
+<img src="Screenshot_1770142485.png" width="300" height="600" alt="Delete confirmation dialog">
