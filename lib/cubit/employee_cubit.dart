@@ -1,54 +1,32 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/employee.dart';
+import '../repositories/employee_repository.dart';
 
 class EmployeeCubit extends Cubit<List<Employee>> {
-  EmployeeCubit() : super(_initialEmployees());
+  final EmployeeRepository _repository;
 
-  static List<Employee> _initialEmployees() {
-    return [
-      Employee(
-        id: '1',
-        fullName: 'John Doe',
-        jobTitle: 'Software Engineer',
-        country: 'United States',
-        salary: 95000,
-      ),
-      Employee(
-        id: '2',
-        fullName: 'Jane Smith',
-        jobTitle: 'Product Manager',
-        country: 'Canada',
-        salary: 110000,
-      ),
-      Employee(
-        id: '3',
-        fullName: 'Ahmed Hassan',
-        jobTitle: 'UX Designer',
-        country: 'Egypt',
-        salary: 75000,
-      ),
-      Employee(
-        id: '4',
-        fullName: 'Maria Garcia',
-        jobTitle: 'Data Scientist',
-        country: 'Spain',
-        salary: 105000,
-      ),
-    ];
+  EmployeeCubit(this._repository) : super([]) {
+    _loadEmployees();
   }
 
-  void addEmployee(Employee employee) {
-    emit([...state, employee]);
+  Future<void> _loadEmployees() async {
+    final employees = await _repository.getAllEmployees();
+    emit(employees);
   }
 
-  void updateEmployee(Employee updatedEmployee) {
-    emit(state.map((employee) {
-      return employee.id == updatedEmployee.id ? updatedEmployee : employee;
-    }).toList());
+  Future<void> addEmployee(Employee employee) async {
+    await _repository.insertEmployee(employee);
+    await _loadEmployees();
   }
 
-  void deleteEmployee(String id) {
-    emit(state.where((employee) => employee.id != id).toList());
+  Future<void> updateEmployee(Employee updatedEmployee) async {
+    await _repository.updateEmployee(updatedEmployee);
+    await _loadEmployees();
+  }
+
+  Future<void> deleteEmployee(String id) async {
+    await _repository.deleteEmployee(id);
+    await _loadEmployees();
   }
 }
 
